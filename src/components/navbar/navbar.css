@@ -1,0 +1,42 @@
+.navbar {
+    color: black;
+    border-bottom: 1px solid #ffffff59;
+    width: 100%;
+    height: 15vh;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginLogout a{
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    right: 2%;
+    top: 4%;
+    font-size: 0.7rem;
+    justify-content: space-between;
+    
+}
+
+.loginLogout a svg {
+  margin-bottom: 13%;
+}
+
+.taskIcon {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  right: 8%;
+  top: 4%;
+  justify-content: space-between;
+  font-size: 0.7rem;
+}
+
+.taskIcon svg {
+  margin-bottom: 20%;
+}
