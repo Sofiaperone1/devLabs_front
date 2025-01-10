@@ -9,6 +9,7 @@ import calendar from "../imgs/calendar.png"
 import Footer from "../components/footer/footer";
 import TaskIcon from '@mui/icons-material/Task';
 
+
 export default function Home() {
   
   return (
