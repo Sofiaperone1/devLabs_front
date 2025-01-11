@@ -86,11 +86,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
           })}
         />
 
-
-
-
-
-
         {/* Pasamos 'setValue' para el campo 'date' */}
         <DateSelector setValue={(name, value) => setValue('date', value)} resetDate={resetDate} />
 

@@ -1,4 +1,4 @@
-/*import React, {useEffect} from 'react'
+import React, {useEffect} from 'react'
 import { Button } from '@mui/material'
 import Link from 'next/link'
 import { useUser } from '@auth0/nextjs-auth0/client'
@@ -42,4 +42,3 @@ console.log ({user});
 }
 
 export default LoginLogout
-*/

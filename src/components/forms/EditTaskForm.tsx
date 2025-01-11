@@ -1,13 +1,15 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useMemo } from "react";
 import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "@/redux/hooks";
 import { updateTask } from "../../redux/features/counterSlice";
 import DateSelector from "./DateSelector";
 import { useUpdateTaskMutation } from "@/redux/api/tasksApi";
-import "../listComponent/ListComponent.css"
+import "../listComponent/ListComponent.css";
 import { Button } from "@mui/material";
 import dayjs from "dayjs";
+
+
 
 interface Task {
   description: string;
@@ -17,7 +19,7 @@ interface Task {
 interface EditTaskFormProps {
   taskId: number;
   handleClose: () => void;
-  initialData: { description: string; date?: string }; // Nueva propiedad
+  initialData: { description: string; date?: string };
 }
 
 const EditTaskForm: React.FC<EditTaskFormProps> = ({ taskId, handleClose, initialData }) => {
@@ -25,27 +27,38 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ taskId, handleClose, initia
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<Task>({
     mode: "onBlur",
     defaultValues: {
-      date: undefined, // Inicializa la fecha
+      description: initialData.description,
+      date: initialData.date || undefined,
     },
   });
 
-
   const [updateTaskBackend, { isLoading }] = useUpdateTaskMutation();
 
-  // Prellenar los campos con los datos iniciales
-  React.useEffect(() => {
-    setValue("description", initialData.description);
-    setValue("date", initialData.date);
-  }, [initialData, setValue]);
+  // Observar los valores del formulario
+  const currentDescription = watch("description");
+  const currentDate = watch("date");
+
+  // Verificar si hay cambios en el formulario
+  const hasChanges = useMemo(() => {
+    const descriptionChanged = currentDescription !== initialData.description;
+    const dateChanged = currentDate !== initialData.date;
+    return descriptionChanged || dateChanged;
+  }, [currentDescription, currentDate, initialData.description, initialData.date]);
+
   const onSubmit = async (data: Task) => {
     try {
       const updates = {
-        ...data,
-        date: data.date ? new Date(data.date).toISOString() : undefined, // Convierte null a undefined
+        description: data.description,
+        date: data.date === initialData.date ? initialData.date : 
+              data.date ? new Date(data.date).toISOString() : undefined,
       };
-  
-      await updateTaskBackend({ id: taskId, ...updates }).unwrap();
-      dispatch(updateTask({ id: taskId, updates })); // Aquí pasamos un objeto serializable
+
+      const response = await updateTaskBackend({
+        id: taskId,
+        ...updates,
+      }).unwrap();
+
+      dispatch(updateTask({ id: taskId, updates }));
       handleClose();
     } catch (error) {
       console.error("Error updating task:", error);
@@ -69,6 +82,7 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ taskId, handleClose, initia
         <DateSelector
           setValue={(name, value) => setValue("date", value)}
           resetDate={false}
+          initialDate={initialData.date}
         />
         <div className="buttons_cont" style={{ marginTop: "3%" }}>
           <Button
@@ -85,8 +99,9 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ taskId, handleClose, initia
           </Button>
           <Button
             type="submit"
+            disabled={!hasChanges || isLoading}
             style={{
-              backgroundColor: "violet",
+              backgroundColor: hasChanges ? "violet" : "#e0e0e0",
               color: "white",
               marginRight: "0",
               padding: "1% 4% 1% 4%",

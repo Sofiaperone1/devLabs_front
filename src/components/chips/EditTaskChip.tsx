@@ -22,6 +22,8 @@ const EditTaskChip: React.FC<EditTaskChipProps> = ({ taskId, taskData }) => {
     console.log(taskData.date); // Muestra la fecha de la tarea en la consola
   };
 
+  
+
   return (
     <>
       <Stack direction="row" spacing={1}>
@@ -36,14 +38,14 @@ const EditTaskChip: React.FC<EditTaskChipProps> = ({ taskId, taskData }) => {
         onClick={handleClose}
       >
         <div
-       /*   onClick={(e) => e.stopPropagation()} // Evita cerrar el Backdrop al hacer clic en el contenido
+          onClick={(e) => e.stopPropagation()} // Evita cerrar el Backdrop al hacer clic en el contenido
           style={{
             backgroundColor: "white",
             padding: "20px",
             borderRadius: "8px",
             maxWidth: "400px",
             width: "90%",
-          }}*/
+          }}
         >
           {/* Pasa los datos de la tarea al formulario */}
           <EditTaskForm

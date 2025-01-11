@@ -2,7 +2,7 @@
 import React from "react"
 import "./globals.css";
 import { Providers } from "@/redux/providers";
-//import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 export default function RootLayout({
   children,
@@ -12,16 +12,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+      <UserProvider>
           <Providers>
             {children}
           </Providers>
+      </UserProvider>
       </body>
     </html>
   );
 }
 
-/* <UserProvider>
-          <Providers>
-            {children}
-          </Providers>
-        </UserProvider>*/
+

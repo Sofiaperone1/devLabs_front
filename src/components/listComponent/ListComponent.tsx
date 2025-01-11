@@ -107,9 +107,6 @@ export default function CheckboxList() {
   }, [data, dispatch]);
 
 
-  console.log ("esta es la data q uso", datas)
-
-
   const handleToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];

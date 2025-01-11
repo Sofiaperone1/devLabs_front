@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect,useState} from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -7,22 +7,33 @@ import { Dayjs } from 'dayjs';
 import dayjs from 'dayjs'; // Asegúrate de importar dayjs
 
 interface DateSelectorProps {
-  setValue: (name: string, value: any) => void; // Recibimos setValue desde el formulario
-  resetDate: boolean; // Agrega la propiedad resetDate
+  setValue: (name: string, value: any) => void;
+  resetDate: boolean;
+  initialDate?: string; // Añadimos la prop initialDate como opcional
 }
 
-const DateSelector: React.FC<DateSelectorProps> = ({ setValue, resetDate }) => {
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+const DateSelector: React.FC<DateSelectorProps> = ({ setValue, resetDate, initialDate }) => {
+  // Inicializamos selectedDate con la fecha inicial si existe
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(() => 
+    initialDate ? dayjs(initialDate) : null
+  );
+
+  // Efecto para manejar la fecha inicial cuando cambia
+  useEffect(() => {
+    if (initialDate) {
+      setSelectedDate(dayjs(initialDate));
+    }
+  }, [initialDate]);
 
   const handleDateChange = (newDate: Dayjs | null) => {
     setValue('date', newDate ? newDate.toDate() : null);
-    setSelectedDate(newDate); // Actualiza el estado local de la fecha
+    setSelectedDate(newDate);
   };
 
-  // Restablecer la fecha cuando 'resetDate' cambie a 'true'
-  React.useEffect(() => {
+  // Efecto para manejar el reseteo de la fecha
+  useEffect(() => {
     if (resetDate) {
-      setSelectedDate(null); // Restablece la fecha al valor inicial
+      setSelectedDate(null);
     }
   }, [resetDate]);
 
@@ -34,11 +45,10 @@ const DateSelector: React.FC<DateSelectorProps> = ({ setValue, resetDate }) => {
         onChange={handleDateChange}
         format="DD-MM-YYYY"
         slotProps={{ textField: { fullWidth: true } }}
-        minDate={dayjs()} // Bloquea las fechas pasadas
+        minDate={dayjs()}
       />
     </LocalizationProvider>
   );
 };
-
 
 export default DateSelector;
