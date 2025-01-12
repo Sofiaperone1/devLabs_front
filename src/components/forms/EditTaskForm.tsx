@@ -1,15 +1,12 @@
-import React, { useEffect, useMemo } from "react";
-import TextField from "@mui/material/TextField";
-import { useForm } from "react-hook-form";
-import { useAppDispatch } from "@/redux/hooks";
-import { updateTask } from "../../redux/features/counterSlice";
-import DateSelector from "./DateSelector";
-import { useUpdateTaskMutation } from "@/redux/api/tasksApi";
-import "../listComponent/ListComponent.css";
-import { Button } from "@mui/material";
-import dayjs from "dayjs";
-
-
+import React, { useMemo } from 'react';
+import TextField from '@mui/material/TextField';
+import { useForm } from 'react-hook-form';
+import { useAppDispatch } from '@/redux/hooks';
+import { updateTask } from '../../redux/features/counterSlice';
+import DateSelector from './DateSelector';
+import { useUpdateTaskMutation } from '@/redux/api/tasksApi';
+import '../listComponent/ListComponent.css';
+import { Button } from '@mui/material';
 
 interface Task {
   description: string;
@@ -22,10 +19,20 @@ interface EditTaskFormProps {
   initialData: { description: string; date?: string };
 }
 
-const EditTaskForm: React.FC<EditTaskFormProps> = ({ taskId, handleClose, initialData }) => {
+const EditTaskForm: React.FC<EditTaskFormProps> = ({
+  taskId,
+  handleClose,
+  initialData,
+}) => {
   const dispatch = useAppDispatch();
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<Task>({
-    mode: "onBlur",
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<Task>({
+    mode: 'onBlur',
     defaultValues: {
       description: initialData.description,
       date: initialData.date || undefined,
@@ -35,25 +42,34 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ taskId, handleClose, initia
   const [updateTaskBackend, { isLoading }] = useUpdateTaskMutation();
 
   // Observar los valores del formulario
-  const currentDescription = watch("description");
-  const currentDate = watch("date");
+  const currentDescription = watch('description');
+  const currentDate = watch('date');
 
   // Verificar si hay cambios en el formulario
   const hasChanges = useMemo(() => {
     const descriptionChanged = currentDescription !== initialData.description;
     const dateChanged = currentDate !== initialData.date;
     return descriptionChanged || dateChanged;
-  }, [currentDescription, currentDate, initialData.description, initialData.date]);
+  }, [
+    currentDescription,
+    currentDate,
+    initialData.description,
+    initialData.date,
+  ]);
 
   const onSubmit = async (data: Task) => {
     try {
       const updates = {
         description: data.description,
-        date: data.date === initialData.date ? initialData.date : 
-              data.date ? new Date(data.date).toISOString() : undefined,
+        date:
+          data.date === initialData.date
+            ? initialData.date
+            : data.date
+              ? new Date(data.date).toISOString()
+              : undefined,
       };
 
-      const response = await updateTaskBackend({
+      await updateTaskBackend({
         id: taskId,
         ...updates,
       }).unwrap();
@@ -61,36 +77,39 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ taskId, handleClose, initia
       dispatch(updateTask({ id: taskId, updates }));
       handleClose();
     } catch (error) {
-      console.error("Error updating task:", error);
+      console.error('Error updating task:', error);
     }
   };
 
   return (
     <form className="taskForm" onSubmit={handleSubmit(onSubmit)}>
-      <div style={{ backgroundColor: "white", padding: "3% 3% 2% 3%" }}>
+      <div style={{ backgroundColor: 'white', padding: '3% 3% 2% 3%' }}>
         <TextField
-          style={{ width: "100%", marginBottom: "2%" }}
+          style={{ width: '100%', marginBottom: '2%' }}
           id="outlined-basic"
           label="Description of the task"
           variant="outlined"
           error={!!errors.description}
-          helperText={errors.description ? errors.description.message : ""}
-          {...register("description", {
-            required: "Required",
+          helperText={errors.description ? errors.description.message : ''}
+          {...register('description', {
+            required: 'Required',
           })}
         />
         <DateSelector
-          setValue={(name, value) => setValue("date", value)}
+          setValue={(name: 'description' | 'date', value: Date | null) =>
+            setValue(name, value ? value.toISOString() : undefined)
+          }
           resetDate={false}
           initialDate={initialData.date}
         />
-        <div className="buttons_cont" style={{ marginTop: "3%" }}>
+
+        <div className="buttons_cont" style={{ marginTop: '3%' }}>
           <Button
             style={{
-              backgroundColor: "black",
-              color: "white",
-              padding: "1% 4% 1% 4%",
-              marginRight: "2%",
+              backgroundColor: 'black',
+              color: 'white',
+              padding: '1% 4% 1% 4%',
+              marginRight: '2%',
             }}
             type="button"
             onClick={handleClose}
@@ -101,10 +120,10 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({ taskId, handleClose, initia
             type="submit"
             disabled={!hasChanges || isLoading}
             style={{
-              backgroundColor: hasChanges ? "violet" : "#e0e0e0",
-              color: "white",
-              marginRight: "0",
-              padding: "1% 4% 1% 4%",
+              backgroundColor: hasChanges ? 'violet' : '#e0e0e0',
+              color: 'white',
+              marginRight: '0',
+              padding: '1% 4% 1% 4%',
             }}
           >
             Save

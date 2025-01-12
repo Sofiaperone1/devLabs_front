@@ -1,20 +1,18 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
 import { useCreateTaskMutation } from '../../redux/api/tasksApi';
 import DateSelector from './DateSelector';
-import { addOnlyTask } from "../../redux/features/counterSlice";  // Importa la nueva acción
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { addOnlyTask } from '../../redux/features/counterSlice'; // Importa la nueva acción
+import { useAppDispatch } from '../../redux/hooks';
 import { Button } from '@mui/material';
-import "../listComponent/ListComponent.css"
-
-
+import '../listComponent/ListComponent.css';
 
 interface Task {
-    description: string;
-    date?: string; // Ahora es 'Date | undefined'
-  }
+  description: string;
+  date?: string; // Ahora es 'Date | undefined'
+}
 
 interface TaskFormProps {
   handleClose: () => void;
@@ -31,19 +29,18 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
   const dispatch = useAppDispatch();
 
   const [createTask] = useCreateTaskMutation();
-  const datas = useAppSelector(state => state.counterReducer.data)
   const [resetDate, setResetDate] = useState(false); // Estado para restablecer la fecha
- 
 
-   // Llamada al backend y actualización del estado global
-   const onSubmit = async (data: Task) => {
+  // Llamada al backend y actualización del estado global
+  const onSubmit = async (data: Task) => {
+    console.log(data.date);
 
-    console.log(data.date)
-    
     const newTask = {
       _id: Date.now(),
       description: data.description,
-      date: data.date ? new Date(data.date).toISOString() : new Date().toISOString(),
+      date: data.date
+        ? new Date(data.date).toISOString()
+        : new Date().toISOString(),
     };
 
     try {
@@ -75,7 +72,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
     <form className="taskForm" onSubmit={handleSubmit(onSubmit)}>
       <div style={{ backgroundColor: 'white', padding: '3% 3% 2% 3%' }}>
         <TextField
-          style={{ width: '100%', marginBottom:"2%" }}
+          style={{ width: '100%', marginBottom: '2%' }}
           id="outlined-basic"
           label="Description of the task"
           variant="outlined"
@@ -87,8 +84,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
         />
 
         {/* Pasamos 'setValue' para el campo 'date' */}
-        <DateSelector setValue={(name, value) => setValue('date', value)} resetDate={resetDate} />
-
+        <DateSelector
+          setValue={(name, value) => setValue('date', value)}
+          resetDate={resetDate}
+        />
 
         <div className="buttons_cont" style={{ marginTop: '3%' }}>
           <Button
@@ -96,7 +95,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
               backgroundColor: 'black',
               color: 'white',
               padding: '1% 4% 1% 4%',
-              marginRight:"2%"
+              marginRight: '2%',
             }}
             type="button"
             onClick={handleClose}

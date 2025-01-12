@@ -1,28 +1,26 @@
-.imgs_cont{
-
+.imgs_cont {
   display: flex;
   height: 78vh;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  
 }
 
-.semi_imgs_cont{
-display: flex;
-flex-direction: column;
-width: 100%;
-margin-left: 5%;
-height: 44%;
+.semi_imgs_cont {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-left: 5%;
+  height: 44%;
 }
 
-.imgs_cont .semi_imgs_cont .brand1{
+.imgs_cont .semi_imgs_cont .brand1 {
   width: 91%;
   height: 86%;
   margin-left: 3%;
 }
 
-.imgs_cont .semi_imgs_cont .brand2{
+.imgs_cont .semi_imgs_cont .brand2 {
   color: transparent;
   margin-left: 30%;
   width: 87%;
@@ -35,12 +33,10 @@ height: 44%;
   margin-left: 3%;
 }
 
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
-
 
 @media (prefers-color-scheme: dark) {
   :root {

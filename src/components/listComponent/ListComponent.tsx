@@ -1,81 +1,4 @@
-/*import * as React from "react";
-import { useEffect } from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-
-
-  return (
-    <List
-      className="listcomponent"
-      sx={{
-        width: "100%",
-        maxWidth: 900,
-        bgcolor: "background.paper",
-        marginTop: "1%",
-        maxHeight: 300,
-        overflowY: "auto",
-        padding: 0,
-      }}
-    >
-      {datas.map((task) => {
-        const labelId = `checkbox-list-label-${task.id}`;
-        const formattedDate = new Date(task.date).toLocaleDateString("en-GB");
-
-        return (
-          <ListItem
-            key={task.id}
-            style={{ width: "100%" }}
-            disablePadding
-            secondaryAction={
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => handleDelete(task.id)}
-                style={{ marginRight: "1%" }}
-              >
-                <DeleteIcon />
-              </IconButton>
-            }
-          >
-            <ListItemButton
-              role={undefined}
-              onClick={handleToggle(task.id)}
-              dense
-            >
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={checked.includes(task.id)}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ "aria-labelledby": labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText
-                id={labelId}
-                style={{ color: "black", width: "80%" }}
-                primary={task.description}
-              />
-              <ListItemText
-                style={{ color: "black" }}
-                primary={formattedDate}
-              />
-            </ListItemButton>
-          </ListItem>
-        );
-      })}
-    </List>
-  );
-} */
-  
-
-  import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -83,17 +6,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit"
-import { addTasks, removeTask } from "../../redux/features/counterSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useGetTasksQuery, useDeleteTaskMutation } from "@/redux/api/tasksApi";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { addTasks, removeTask } from '../../redux/features/counterSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useGetTasksQuery, useDeleteTaskMutation } from '@/redux/api/tasksApi';
 import EditTaskChip from '../chips/EditTaskChip';
-import "./ListComponent.css";
-
+import './ListComponent.css';
 
 export default function CheckboxList() {
-
   const [checked, setChecked] = React.useState([0]);
   const dispatch = useAppDispatch();
   const { data, error, isLoading } = useGetTasksQuery(null);
@@ -105,7 +25,6 @@ export default function CheckboxList() {
       dispatch(addTasks(data));
     }
   }, [data, dispatch]);
-
 
   const handleToggle = (value: number) => () => {
     const currentIndex = checked.indexOf(value);
@@ -120,7 +39,6 @@ export default function CheckboxList() {
     setChecked(newChecked);
   };
 
-
   const handleDelete = async (taskId: number) => {
     await deleteTask({ id: taskId });
 
@@ -129,7 +47,6 @@ export default function CheckboxList() {
     dispatch(removeTask(updatedTasks));
   };
 
-  
   if (isLoading) {
     return <p>Loading tasks...</p>;
   }
@@ -138,19 +55,19 @@ export default function CheckboxList() {
     return <p>Error loading tasks. Please try again.</p>;
   }
 
-  
   return (
-    <List  className="listcomponent"
-    sx={{
-      width: "100%",
-      maxWidth: 900,
-      bgcolor: "background.paper",
-      marginTop: "1%",
-      maxHeight: 300,
-      overflowY: "auto",
-      padding: 0,
-    }}>
-       
+    <List
+      className="listcomponent"
+      sx={{
+        width: '100%',
+        maxWidth: 900,
+        bgcolor: 'background.paper',
+        marginTop: '1%',
+        maxHeight: 300,
+        overflowY: 'auto',
+        padding: 0,
+      }}
+    >
       {datas.map((value) => {
         const labelId = `checkbox-list-label-${value._id}`;
 
@@ -158,22 +75,25 @@ export default function CheckboxList() {
           <ListItem
             key={value._id}
             secondaryAction={
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => handleDelete(value._id)}
-                  style={{ marginRight: "1%" }}
-                >
-                  <DeleteIcon />
-                </IconButton>
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => handleDelete(value._id)}
+                style={{ marginRight: '1%' }}
+              >
+                <DeleteIcon />
+              </IconButton>
             }
             disablePadding
           >
             <EditTaskChip taskId={value._id} taskData={value} />
-            
-            <ListItemButton role={undefined} onClick={handleToggle(value._id)} dense>
+
+            <ListItemButton
+              role={undefined}
+              onClick={handleToggle(value._id)}
+              dense
+            >
               <ListItemIcon>
-            
                 <Checkbox
                   edge="start"
                   checked={checked.includes(value._id)}
@@ -183,13 +103,20 @@ export default function CheckboxList() {
                 />
               </ListItemIcon>
 
-              <ListItemText style={{color:"black"}}id={labelId} primary={value.description} />
-              <ListItemText style={{color:"black"}}id={labelId} primary={value.date} />
-              
+              <ListItemText
+                style={{ color: 'black' }}
+                id={labelId}
+                primary={value.description}
+              />
+              <ListItemText
+                style={{ color: 'black' }}
+                id={labelId}
+                primary={value.date}
+              />
             </ListItemButton>
           </ListItem>
         );
       })}
     </List>
   );
-} 
+}
