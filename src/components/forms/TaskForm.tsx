@@ -85,7 +85,10 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
 
         {/* Pasamos 'setValue' para el campo 'date' */}
         <DateSelector
-          setValue={(name, value) => setValue('date', value)}
+          setValue={(name, value) => {
+            // Verificar si el valor es una fecha válida y convertirlo a un string (ISO)
+            setValue('date', value ? new Date(value).toISOString() : undefined);
+          }}
           resetDate={resetDate}
         />
 
