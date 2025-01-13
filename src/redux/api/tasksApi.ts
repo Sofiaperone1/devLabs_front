@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { RootState } from '../store';
 
 type Task = {
   _id: number;
@@ -6,11 +7,21 @@ type Task = {
   date: string;
 };
 
+// Base query con lógica del token centralizada
+const baseQuery = fetchBaseQuery({
+  baseUrl: process.env.NEXT_PUBLIC_API_BACKEND,
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as RootState).auth.token; // Obtén el token desde el estado global
+    if (token) {
+      headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  },
+});
+
 export const taskApi = createApi({
   reducerPath: 'createApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BACKEND,
-  }),
+  baseQuery,
   endpoints: (builder) => ({
     getTasks: builder.query<Task[], null>({
       query: () => 'tasks/getAllTasks',

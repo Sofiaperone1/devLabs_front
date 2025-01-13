@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from './features/counterSlice';
 import { taskApi } from './api/tasksApi';
 import { setupListeners } from '@reduxjs/toolkit/query';
+import authReducer from './features/authSlice';
 
 export const store = configureStore({
   reducer: {
     counterReducer,
     [taskApi.reducerPath]: taskApi.reducer,
+    auth: authReducer, // Añadido aquí
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([taskApi.middleware]),
