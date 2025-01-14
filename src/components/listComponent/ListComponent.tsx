@@ -48,11 +48,13 @@ export default function CheckboxList() {
   };
 
   if (isLoading) {
-    return <p>Loading tasks...</p>;
+    return <p style={{ marginTop: '2%' }}>Loading tasks...</p>;
   }
 
   if (error) {
-    return <p>Error loading tasks. Please try again.</p>;
+    return (
+      <p style={{ marginTop: '2%' }}>Error loading tasks. Please try again.</p>
+    );
   }
 
   return (
