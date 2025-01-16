@@ -6,24 +6,17 @@ import PersonIcon from '@mui/icons-material/Person';
 type Props = object;
 
 const LoginLogout = ({}: Props) => {
-  const { error, isLoading, user } = useUser();
+  const { error, user } = useUser();
 
   useEffect(() => {
-    console.log(user, 'entro primero');
-
     if (error) {
       console.error('Auth0 Error:', error.message); // Esto ayuda a depurar si hay errores reales.
     }
   }, [error, user]);
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    console.log(error);
   }
-  if (isLoading) {
-    return <div>Cargando usuario ...</div>;
-  }
-
-  console.log({ user });
 
   return (
     <div className="loginLogout">

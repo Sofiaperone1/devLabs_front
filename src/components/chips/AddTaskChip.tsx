@@ -18,7 +18,7 @@ export default function AddTaskChip() {
   return (
     <Stack direction="row" spacing={1} style={{ width: '45%' }}>
       <Chip
-        label="Agregar prod"
+        label="Add new task"
         onDelete={handleOpen}
         deleteIcon={<AddCircleOutlineIcon style={{ color: 'violet' }} />}
         variant="outlined"

@@ -14,6 +14,12 @@ const initialState: DataState = {
   data: [],
 };
 
+const sortByDate = (tasks: Task[]) => {
+  return [...tasks].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+};
+
 export const counterSlice = createSlice({
   name: 'counter',
   initialState,
@@ -21,11 +27,11 @@ export const counterSlice = createSlice({
     //aca van las funciones que actualizan
 
     addTasks: (state, action: PayloadAction<Task[]>) => {
-      state.data = [...state.data, ...action.payload];
       // Agrega la tarea recibida en el payload
+      state.data = sortByDate(action.payload);
     },
     addOnlyTask: (state, action: PayloadAction<Task>) => {
-      state.data.push(action.payload); // Agrega un solo objeto al array
+      state.data = sortByDate([...state.data, action.payload]);
     },
     // Nueva acción para eliminar una tarea
     removeTask: (state, action: PayloadAction<Task[]>) => {
@@ -33,12 +39,16 @@ export const counterSlice = createSlice({
     },
     updateTask: (
       state,
-      action: PayloadAction<{ id: number; updates: Partial<Task> }>
+      action: PayloadAction<{ description: string; updates: Partial<Task> }>
     ) => {
-      const { id, updates } = action.payload;
-      const taskIndex = state.data.findIndex((task) => task._id === id);
+      const { description, updates } = action.payload;
+      const taskIndex = state.data.findIndex(
+        (task) => task.description === description
+      );
       if (taskIndex !== -1) {
         state.data[taskIndex] = { ...state.data[taskIndex], ...updates };
+        // Ordenar el array después de actualizar la tarea
+        state.data = sortByDate(state.data);
       }
     },
   },

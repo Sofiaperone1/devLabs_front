@@ -1,0 +1,29 @@
+.editTaskForm{
+    width: 86vw !important;
+}
+
+.taskForm{
+        width: 86vw !important;
+}
+
+#btn_cancel{
+        background-color: black;
+        color: white;
+        padding: 1% 4% 1% 4%;
+        margin-right: 2%; 
+}
+
+#btn_save{
+        background-color: violet ;
+        color: white;
+        margin-right: 0;
+        padding: 1% 4% 1% 4%;
+}
+
+#form_cont {
+     background-color:white; padding: 3% 3% 2% 3%;
+}
+
+.btns_cont{
+     margin-top: 3%;
+}

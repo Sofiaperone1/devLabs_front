@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
 .imgs_cont {
   display: flex;
   height: 78vh;
@@ -7,11 +9,20 @@
 }
 
 .semi_imgs_cont {
+  font-family: "Bebas Neue", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 45px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: 100%;
-  margin-left: 5%;
-  height: 44%;
+  margin-left: 9%;
+  height: 100%;
+
+}
+.semi_imgs_cont span {
+color: #ff93ec;
 }
 
 .imgs_cont .semi_imgs_cont .brand1 {

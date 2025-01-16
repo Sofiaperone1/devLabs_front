@@ -1,3 +1,13 @@
-.taskForm {
-  width: 90% !important;
+
+
+/* LIST ITEM */
+
+.listItem {
+  color: black
+}
+
+.desc_item{
+  width: 75%;
+  margin-right: 2%;
+
 }

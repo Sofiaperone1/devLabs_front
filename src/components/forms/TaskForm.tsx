@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
+import { useGetTasksQuery } from '@/redux/api/tasksApi';
 import { useCreateTaskMutation } from '../../redux/api/tasksApi';
 import DateSelector from './DateSelector';
 import { addOnlyTask } from '../../redux/features/counterSlice'; // Importa la nueva acción
 import { useAppDispatch } from '../../redux/hooks';
 import { Button } from '@mui/material';
-import '../listComponent/ListComponent.css';
+import './forms.css';
 
 interface Task {
   description: string;
@@ -27,7 +28,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
   } = useForm<Task>({ mode: 'onBlur' });
 
   const dispatch = useAppDispatch();
-
+  const { refetch } = useGetTasksQuery(null); // Añade esto
   const [createTask] = useCreateTaskMutation();
   const [resetDate, setResetDate] = useState(false); // Estado para restablecer la fecha
 
@@ -46,6 +47,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
     try {
       const response = await createTask(newTask).unwrap();
       if (response) {
+        await refetch();
         dispatch(addOnlyTask(newTask));
         Swal.fire({
           icon: 'success',
@@ -70,7 +72,7 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
 
   return (
     <form className="taskForm" onSubmit={handleSubmit(onSubmit)}>
-      <div style={{ backgroundColor: 'white', padding: '3% 3% 2% 3%' }}>
+      <div id="form_cont">
         <TextField
           style={{ width: '100%', marginBottom: '2%' }}
           id="outlined-basic"
@@ -92,28 +94,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
           resetDate={resetDate}
         />
 
-        <div className="buttons_cont" style={{ marginTop: '3%' }}>
-          <Button
-            style={{
-              backgroundColor: 'black',
-              color: 'white',
-              padding: '1% 4% 1% 4%',
-              marginRight: '2%',
-            }}
-            type="button"
-            onClick={handleClose}
-          >
+        <div className="btns_cont">
+          <Button id="btn_cancel" type="button" onClick={handleClose}>
             Cancel
           </Button>
-          <Button
-            type="submit"
-            style={{
-              backgroundColor: 'violet',
-              color: 'white',
-              marginRight: '0',
-              padding: '1% 4% 1% 4%',
-            }}
-          >
+          <Button type="submit" id="btn_save">
             Save
           </Button>
         </div>

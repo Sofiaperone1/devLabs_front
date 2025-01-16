@@ -11,12 +11,13 @@ import { addTasks, removeTask } from '../../redux/features/counterSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useGetTasksQuery, useDeleteTaskMutation } from '@/redux/api/tasksApi';
 import EditTaskChip from '../chips/EditTaskChip';
+import Swal from 'sweetalert2';
 import './ListComponent.css';
 
 export default function CheckboxList() {
   const [checked, setChecked] = React.useState([0]);
   const dispatch = useAppDispatch();
-  const { data, error, isLoading } = useGetTasksQuery(null);
+  const { data, error } = useGetTasksQuery(null);
   const datas = useAppSelector((state) => state.counterReducer.data);
   const [deleteTask] = useDeleteTaskMutation();
 
@@ -40,32 +41,39 @@ export default function CheckboxList() {
   };
 
   const handleDelete = async (taskId: number) => {
-    await deleteTask({ id: taskId });
-
-    const updatedTasks = datas.filter((task) => task._id !== taskId);
-
-    dispatch(removeTask(updatedTasks));
+    Swal.fire({
+      title: 'Are you sure you want to delete this task?',
+      showCancelButton: true,
+      confirmButtonText: 'delete',
+      denyButtonText: 'cancel',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteTask({ id: taskId });
+        const updatedTasks = datas.filter((task) => task._id !== taskId);
+        dispatch(removeTask(updatedTasks));
+      }
+    });
   };
 
-  if (isLoading) {
-    return <p style={{ marginTop: '2%' }}>Loading tasks...</p>;
-  }
-
   if (error) {
-    return (
-      <p style={{ marginTop: '2%' }}>Error loading tasks. Please try again.</p>
-    );
+    console.log(error);
   }
-
+  const formatDate = (isoDate: string): string => {
+    const date = new Date(isoDate);
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
   return (
     <List
-      className="listcomponent"
+      id="listComponent"
       sx={{
         width: '100%',
-        maxWidth: 900,
+        maxWidth: 1000,
         bgcolor: 'background.paper',
         marginTop: '1%',
-        maxHeight: 300,
+        maxHeight: 600,
         overflowY: 'auto',
         padding: 0,
       }}
@@ -75,13 +83,13 @@ export default function CheckboxList() {
 
         return (
           <ListItem
+            className="listItem"
             key={value._id}
             secondaryAction={
               <IconButton
                 edge="end"
                 aria-label="delete"
                 onClick={() => handleDelete(value._id)}
-                style={{ marginRight: '1%' }}
               >
                 <DeleteIcon />
               </IconButton>
@@ -106,15 +114,12 @@ export default function CheckboxList() {
               </ListItemIcon>
 
               <ListItemText
-                style={{ color: 'black' }}
+                className="desc_item"
                 id={labelId}
                 primary={value.description}
               />
-              <ListItemText
-                style={{ color: 'black' }}
-                id={labelId}
-                primary={value.date}
-              />
+
+              <ListItemText id={labelId} primary={formatDate(value.date)} />
             </ListItemButton>
           </ListItem>
         );

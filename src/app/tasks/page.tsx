@@ -8,24 +8,30 @@ import Navbar from '@/components/navbar/navbar';
 import './task.css';
 import Footer from '@/components/footer/footer';
 
+import CircularProgress from '@mui/material/CircularProgress';
+
 const Tasks = () => {
   const { user, isLoading } = useUser();
   const router = useRouter();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div id="isLoading">
+        <CircularProgress color="secondary" size="5rem" />
+      </div>
+    );
   }
 
   if (!user) {
     router.push('/api/auth/login?returnTo=/tasks');
-    return null; // Evita renderizar mientras redirige
+    return null;
   }
 
   // Renderiza si está autenticado
   return (
     <div>
       <Navbar />
-      <div className="tasksList">
+      <div className="tasksCont">
         <AddTaskChip />
         <ListComponent />
       </div>

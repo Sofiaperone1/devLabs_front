@@ -38,12 +38,24 @@ export const taskApi = createApi({
       }),
     }),
     // PUT (update) a task
-    updateTask: builder.mutation<Task, Partial<Task> & { id: number }>({
-      query: ({ id, ...updatedTask }) => ({
-        url: `tasks/editTasks/${id}`,
-        method: 'PUT',
-        body: updatedTask,
-      }),
+    updateTask: builder.mutation<
+      Task,
+      { description: string; updates: Partial<Task> }
+    >({
+      query: ({ description, updates }) => {
+        // Encode la descripción para manejar espacios y caracteres especiales
+        const encodedDescription = encodeURIComponent(description);
+
+        console.log('Mutation recibe:', { description, updates });
+        console.log('URL construida:', `tasks/editTasks/${encodedDescription}`);
+        console.log('Body enviado:', updates);
+
+        return {
+          url: `tasks/editTasks/${encodedDescription}`,
+          method: 'PUT',
+          body: updates,
+        };
+      },
     }),
     // DELETE a task
     deleteTask: builder.mutation<void, { id: number }>({

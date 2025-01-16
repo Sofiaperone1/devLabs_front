@@ -8,6 +8,12 @@
   align-items: center;
 }
 
+.ll_loading{
+  color: white;
+  position: absolute;
+  right: 2%;
+}
+
 .loginLogout a {
   color: white;
   display: flex;
