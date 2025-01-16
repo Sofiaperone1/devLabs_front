@@ -16,13 +16,13 @@ export default function AddTaskChip() {
   };
 
   return (
-    <Stack direction="row" spacing={1} style={{ width: '45%' }}>
+    <Stack direction="row" spacing={1}>
       <Chip
         label="Add new task"
         onDelete={handleOpen}
-        deleteIcon={<AddCircleOutlineIcon style={{ color: 'violet' }} />}
+        deleteIcon={<AddCircleOutlineIcon />}
         variant="outlined"
-        style={{ color: 'white', borderColor: 'violet', width: '100%' }}
+        id="add_chip"
       />
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

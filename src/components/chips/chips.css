@@ -1,5 +1,14 @@
 
   .backdrop {
-    background-color: aqua;
     z-index: 1300;
+  }
+
+  #add_chip{
+    color: white;
+    border-color: violet;
+    width: 40vw 
+  }
+
+  #add_chip svg {
+    color: violet;
   }
