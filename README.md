@@ -1,5 +1,7 @@
 ## Frontend - Task Management App
 
+Deploy: [https://dev-labs-front.vercel.app/]
+
 Project Overview
 
 - This is the frontend for the Task Management web application built with React, Next.js, and TypeScript. It provides user authentication and a task management interface using Material-UI for the UI components and Redux Toolkit for state management.
