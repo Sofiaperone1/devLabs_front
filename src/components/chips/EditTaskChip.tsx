@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack';
 import Backdrop from '@mui/material/Backdrop';
 import EditIcon from '@mui/icons-material/Edit';
 import EditTaskForm from '../forms/EditTaskForm';
-import './chips.css';
 
 interface EditTaskChipProps {
   taskId: number;
@@ -32,7 +31,7 @@ const EditTaskChip: React.FC<EditTaskChipProps> = ({ taskData }) => {
           deleteIcon={<EditIcon />}
         />
       </Stack>
-      <Backdrop open={open} className="backdrop" onClick={handleClose}>
+      <Backdrop open={open} sx={{ zIndex: 1300 }} onClick={handleClose}>
         <div onClick={(e) => e.stopPropagation()}>
           <EditTaskForm
             originalDescription={taskData.description} // Cambiado de taskId a originalDescription

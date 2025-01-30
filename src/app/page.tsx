@@ -5,7 +5,6 @@ import './page.module.css';
 import Navbar from '../components/navbar/navbar';
 import calendar from '../imgs/calendar.png';
 import Footer from '../components/footer/footer';
-import TaskIcon from '@mui/icons-material/Task';
 
 export default function Home() {
   return (
@@ -19,10 +18,6 @@ export default function Home() {
           </p>
           <p>our app turns your lists into achievements</p>
         </div>
-        <a className="taskIcon" href="/tasks">
-          <TaskIcon />
-          Tasks
-        </a>
         <Image src={calendar} alt="brand"></Image>
       </div>
       <Footer />

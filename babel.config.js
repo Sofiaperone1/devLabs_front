@@ -4,4 +4,5 @@ module.exports = {
     ['@babel/preset-react', { runtime: 'automatic' }],
     '@babel/preset-typescript',
   ],
+  plugins: [['styled-components', { ssr: true }]], // Habilita SSR en styled-components
 };

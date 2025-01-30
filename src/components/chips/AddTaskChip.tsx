@@ -22,7 +22,17 @@ export default function AddTaskChip() {
         onDelete={handleOpen}
         deleteIcon={<AddCircleOutlineIcon />}
         variant="outlined"
-        id="add_chip"
+        sx={{
+          color: 'white',
+          borderColor: 'violet',
+          width: '40vw',
+          '& .MuiChip-deleteIcon': {
+            color: 'violet',
+            '&:hover': {
+              color: 'violet', // Evita que cambie de color al pasar el mouse
+            },
+          },
+        }}
       />
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

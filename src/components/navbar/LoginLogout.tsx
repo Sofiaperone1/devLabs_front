@@ -1,25 +1,44 @@
 import React, { useEffect } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import './navbar.css';
+import styled from 'styled-components';
 import PersonIcon from '@mui/icons-material/Person';
+import { Box } from '@mui/material';
 
-type Props = object;
+const LoginLogoutContainer = styled(Box)`
+  position: absolute;
+  right: 2%;
+  top: 4%;
 
-const LoginLogout = ({}: Props) => {
+  a {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.7rem;
+    text-decoration: none;
+    justify-content: space-between;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: violet;
+    }
+
+    svg {
+      margin-bottom: 13%;
+    }
+  }
+`;
+
+const LoginLogout = () => {
   const { error, user } = useUser();
 
   useEffect(() => {
     if (error) {
-      console.error('Auth0 Error:', error.message); // Esto ayuda a depurar si hay errores reales.
+      console.error('Auth0 Error:', error.message);
     }
   }, [error, user]);
-
-  if (error) {
-    console.log(error);
-  }
-
   return (
-    <div className="loginLogout">
+    <LoginLogoutContainer className="loginLogout">
       {!user && (
         /* eslint-disable @next/next/no-html-link-for-pages */
         <a href="/api/auth/login?returnTo=/tasks">
@@ -34,7 +53,7 @@ const LoginLogout = ({}: Props) => {
         </a>
         /* eslint-enable @next/next/no-html-link-for-pages */
       )}
-    </div>
+    </LoginLogoutContainer>
   );
 };
 
