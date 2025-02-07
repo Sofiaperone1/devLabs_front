@@ -43,7 +43,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        label="Selecciona una fecha"
+        label="Select a date"
         value={selectedDate}
         onChange={handleDateChange}
         format="DD-MM-YYYY"

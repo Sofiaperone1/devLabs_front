@@ -2,7 +2,6 @@ import React from 'react';
 import LoginLogout from './LoginLogout';
 import logo from '../../imgs/logo.png';
 import Image from 'next/image';
-import './navbar.css';
 import TaskIcon from '@mui/icons-material/Task';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import styled from 'styled-components';

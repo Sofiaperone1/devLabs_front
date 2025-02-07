@@ -5,9 +5,8 @@ import { useAppDispatch } from '@/redux/hooks';
 import { updateTask } from '../../redux/features/counterSlice';
 import DateSelector from './DateSelector';
 import { useUpdateTaskMutation } from '@/redux/api/tasksApi';
-import '../listComponent/ListComponent.css';
-import { Button } from '@mui/material';
-import './forms.css';
+import Buttons from '@/utils/Buttons';
+import styled from 'styled-components';
 
 interface Task {
   description: string;
@@ -19,6 +18,14 @@ interface EditTaskFormProps {
   handleClose: () => void;
   initialData: { description: string; date?: string };
 }
+
+const CustomForm = styled.form`
+  width: 86vw;
+  .form_cont {
+    background-color: white;
+    padding: 3% 3% 2% 3%;
+  }
+`;
 
 const EditTaskForm: React.FC<EditTaskFormProps> = ({
   originalDescription, // Actualizado el prop
@@ -67,8 +74,6 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
               ? new Date(data.date).toISOString()
               : undefined,
       };
-      console.log('primero rompe el front', originalDescription);
-      // Actualizado para usar description en lugar de id
       await updateTaskBackend({
         description: originalDescription,
         updates: {
@@ -90,10 +95,10 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
   };
 
   return (
-    <form className="editTaskForm" onSubmit={handleSubmit(onSubmit)}>
-      <div id="form_cont">
+    <CustomForm className="editTaskForm" onSubmit={handleSubmit(onSubmit)}>
+      <div className="form_cont">
         <TextField
-          style={{ width: '100%', marginBottom: '2%' }}
+          sx={{ width: '100%', marginBottom: '2%' }}
           id="outlined-basic"
           label="Description of the task"
           variant="outlined"
@@ -101,6 +106,10 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
           helperText={errors.description ? errors.description.message : ''}
           {...register('description', {
             required: 'Required',
+            maxLength: {
+              value: 90,
+              message: 'Maximum 90 characters allowed', // Mensaje de error
+            },
           })}
         />
         <DateSelector
@@ -112,22 +121,15 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
         />
 
         <div className="btns_cont">
-          <Button id="btn_cancel" type="button" onClick={handleClose}>
+          <Buttons variant="cancel" type="button" onClick={handleClose}>
             Cancel
-          </Button>
-          <Button
-            type="submit"
-            id="btn_save"
-            disabled={!hasChanges || isLoading}
-            style={{
-              backgroundColor: hasChanges ? 'violet' : '#e0e0e0',
-            }}
-          >
+          </Buttons>
+          <Buttons type="submit" disabled={!hasChanges || isLoading}>
             Save
-          </Button>
+          </Buttons>
         </div>
       </div>
-    </form>
+    </CustomForm>
   );
 };
 

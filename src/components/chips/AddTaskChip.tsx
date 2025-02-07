@@ -24,12 +24,12 @@ export default function AddTaskChip() {
         variant="outlined"
         sx={{
           color: 'white',
-          borderColor: 'violet',
+          borderColor: 'primary.main',
           width: '40vw',
           '& .MuiChip-deleteIcon': {
-            color: 'violet',
+            color: 'primary.main',
             '&:hover': {
-              color: 'violet', // Evita que cambie de color al pasar el mouse
+              color: 'primary.main', // Evita que cambie de color al pasar el mouse
             },
           },
         }}

@@ -1,25 +1,39 @@
-import React, { useState } from 'react';
+import * as React from 'react'; // En lugar de import React from 'react';
+import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Swal from 'sweetalert2';
 import { useForm } from 'react-hook-form';
 import { useGetTasksQuery } from '@/redux/api/tasksApi';
 import { useCreateTaskMutation } from '../../redux/api/tasksApi';
 import DateSelector from './DateSelector';
-import { addOnlyTask } from '../../redux/features/counterSlice'; // Importa la nueva acción
+import { addOnlyTask } from '../../redux/features/counterSlice';
 import { useAppDispatch } from '../../redux/hooks';
-import { Button } from '@mui/material';
-import './forms.css';
+import Buttons from '@/utils/Buttons';
+import styled from 'styled-components';
+import { useAuth } from '@/redux/features/authSlice';
 
 interface Task {
+  _id: number;
   description: string;
-  date?: string; // Ahora es 'Date | undefined'
+  date: string;
+  username: string;
 }
 
 interface TaskFormProps {
   handleClose: () => void;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
+const CustomForm = styled.form`
+  width: 86vw;
+  .form_cont {
+    background-color: white;
+    padding: 3% 3% 2% 3%;
+  }
+`;
+
+const TaskForm: React.FC<TaskFormProps> = ({
+  handleClose,
+}): React.JSX.Element => {
   const {
     register,
     handleSubmit,
@@ -28,21 +42,31 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
   } = useForm<Task>({ mode: 'onBlur' });
 
   const dispatch = useAppDispatch();
-  const { refetch } = useGetTasksQuery(null); // Añade esto
+  const { refetch } = useGetTasksQuery(null);
   const [createTask] = useCreateTaskMutation();
-  const [resetDate, setResetDate] = useState(false); // Estado para restablecer la fecha
+  const [resetDate, setResetDate] = useState(false);
+  const { user } = useAuth();
 
-  // Llamada al backend y actualización del estado global
-  const onSubmit = async (data: Task) => {
-    console.log(data.date);
+  const onSubmit = async (data: Omit<Task, '_id' | 'username'>) => {
+    if (!user?.name) {
+      Swal.fire({
+        icon: 'error',
+        title: 'User information not available',
+        showConfirmButton: true,
+      });
+      return;
+    }
+
+    const taskDate = data.date
+      ? new Date(data.date).toISOString()
+      : new Date().toISOString();
 
     const newTask = {
       _id: Date.now(),
       description: data.description,
-      date: data.date
-        ? new Date(data.date).toISOString()
-        : new Date().toISOString(),
-    };
+      username: user.name,
+      date: taskDate, // Ahora taskDate es siempre un string
+    } satisfies Task;
 
     try {
       const response = await createTask(newTask).unwrap();
@@ -71,39 +95,39 @@ const TaskForm: React.FC<TaskFormProps> = ({ handleClose }) => {
   };
 
   return (
-    <form className="taskForm" onSubmit={handleSubmit(onSubmit)}>
-      <div id="form_cont">
+    <CustomForm className="taskForm" onSubmit={handleSubmit(onSubmit)}>
+      <div className="form_cont">
         <TextField
-          style={{ width: '100%', marginBottom: '2%' }}
+          sx={{ width: '100%', marginBottom: '2%' }}
           id="outlined-basic"
           label="Description of the task"
           variant="outlined"
           error={!!errors.description}
-          helperText={errors.description ? errors.description.message : ''} // Usa el mensaje definido en la validación
+          helperText={errors.description ? errors.description.message : ''}
           {...register('description', {
-            required: 'Description is required', // Define el mensaje aquí
+            required: 'Description is required',
+            maxLength: {
+              value: 90,
+              message: 'Maximum 90 characters allowed',
+            },
           })}
         />
 
-        {/* Pasamos 'setValue' para el campo 'date' */}
         <DateSelector
           setValue={(name, value) => {
-            // Verificar si el valor es una fecha válida y convertirlo a un string (ISO)
-            setValue('date', value ? new Date(value).toISOString() : undefined);
+            setValue('date', value?.toISOString() ?? new Date().toISOString());
           }}
           resetDate={resetDate}
         />
 
         <div className="btns_cont">
-          <Button id="btn_cancel" type="button" onClick={handleClose}>
+          <Buttons variant="cancel" type="button" onClick={handleClose}>
             Cancel
-          </Button>
-          <Button type="submit" id="btn_save">
-            Save
-          </Button>
+          </Buttons>
+          <Buttons type="submit">Save</Buttons>
         </div>
       </div>
-    </form>
+    </CustomForm>
   );
 };
 

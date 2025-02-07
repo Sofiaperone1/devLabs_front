@@ -5,16 +5,22 @@ type Task = {
   _id: number;
   description: string;
   date: string;
+  username: string;
 };
 
 // Base query con lógica del token centralizada
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_BACKEND,
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).auth.token; // Obtén el token desde el estado global
+    const state = getState() as RootState;
+    const token = state.auth.token;
+
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
+    } else {
+      console.warn('⚠️ No hay token disponible');
     }
+
     return headers;
   },
 });
@@ -23,8 +29,8 @@ export const taskApi = createApi({
   reducerPath: 'createApi',
   baseQuery,
   endpoints: (builder) => ({
-    getTasks: builder.query<Task[], null>({
-      query: () => 'tasks/getAllTasks',
+    getTasks: builder.query<Task[], string>({
+      query: (username) => `tasks/getAllTasks?username=${username || ''}`,
     }),
     getTaskById: builder.query<Task, { id: string }>({
       query: ({ id }) => `tasks/getTask/${id}`,
@@ -46,7 +52,6 @@ export const taskApi = createApi({
         // Encode la descripción para manejar espacios y caracteres especiales
         const encodedDescription = encodeURIComponent(description);
 
-        console.log('Mutation recibe:', { description, updates });
         console.log('URL construida:', `tasks/editTasks/${encodedDescription}`);
         console.log('Body enviado:', updates);
 
@@ -74,3 +79,11 @@ export const {
   useUpdateTaskMutation,
   useCreateTaskMutation,
 } = taskApi;
+
+/* query: (userName) => {
+        console.log('User enviado:', userName);
+        return {
+          url: `tasks/getAllTasks?userName=${userName || ''}`,
+          method: 'GET',
+        };
+      }, */

@@ -1,17 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 interface Task {
   _id: number;
   description: string;
   date: string;
+  username?: string;
 }
 
-// Definir el tipo para el estado
+export interface AddTasksPayload {
+  tasks: Task[];
+  user: string; // Changed to string since we're passing user.name directly
+}
+
 interface DataState {
-  data: Task[]; // Ahora es un array de objetos tipo `Task`
+  data: Task[];
+  currentUser: string | null;
 }
 
 const initialState: DataState = {
   data: [],
+  currentUser: null,
 };
 
 const sortByDate = (tasks: Task[]) => {
@@ -24,18 +32,20 @@ export const counterSlice = createSlice({
   name: 'counter',
   initialState,
   reducers: {
-    //aca van las funciones que actualizan
-
-    addTasks: (state, action: PayloadAction<Task[]>) => {
-      // Agrega la tarea recibida en el payload
-      state.data = sortByDate(action.payload);
+    addTasks: (state, action: PayloadAction<AddTasksPayload>) => {
+      state.data = action.payload.tasks;
+      state.currentUser = action.payload.user;
+      console.log('User en counterslice:', action.payload.user);
     },
     addOnlyTask: (state, action: PayloadAction<Task>) => {
+      if (!action.payload.username) {
+        console.error('Task must include userId and username');
+        return;
+      }
       state.data = sortByDate([...state.data, action.payload]);
     },
-    // Nueva acción para eliminar una tarea
     removeTask: (state, action: PayloadAction<Task[]>) => {
-      state.data = action.payload; // Reemplaza el estado con las tareas actualizadas (sin la tarea eliminada)
+      state.data = action.payload;
     },
     updateTask: (
       state,
@@ -47,7 +57,6 @@ export const counterSlice = createSlice({
       );
       if (taskIndex !== -1) {
         state.data[taskIndex] = { ...state.data[taskIndex], ...updates };
-        // Ordenar el array después de actualizar la tarea
         state.data = sortByDate(state.data);
       }
     },
@@ -56,5 +65,4 @@ export const counterSlice = createSlice({
 
 export const { addTasks, addOnlyTask, removeTask, updateTask } =
   counterSlice.actions;
-
 export default counterSlice.reducer;
